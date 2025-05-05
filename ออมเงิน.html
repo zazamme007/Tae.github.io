@@ -1,0 +1,1111 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบฝาก-ถอนเงินนักเรียน</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            font-family: 'Kanit', sans-serif;
+        }
+
+        body {
+            background-color: #E0F7FA;
+            color: #333333;
+        }
+
+        .btn-primary {
+            background-color: #00BCD4;
+            color: white;
+            transition: all 0.3s ease;
+            border-radius: 12px;
+        }
+
+        .btn-primary:hover {
+            background-color: #0097A7;
+            transform: scale(1.05);
+        }
+
+        .btn-secondary {
+            background-color: #FFEB3B;
+            color: #333333;
+            transition: all 0.3s ease;
+            border-radius: 12px;
+        }
+
+        .btn-secondary:hover {
+            background-color: #FDD835;
+            transform: scale(1.05);
+        }
+
+        .btn-accent {
+            background-color: #F48FB1;
+            color: white;
+            transition: all 0.3s ease;
+            border-radius: 12px;
+        }
+
+        .btn-accent:hover {
+            background-color: #F06292;
+            transform: scale(1.05);
+        }
+
+        .student-card {
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 2px solid #F48FB1;
+            background-color: white;
+        }
+
+        .student-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-button {
+            border-radius: 12px 12px 0 0;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active {
+            background-color: #00BCD4;
+            color: white;
+        }
+
+        .tab-button:not(.active):hover {
+            background-color: #B2EBF2;
+        }
+
+        .tab-content {
+            border-radius: 0 0 12px 12px;
+        }
+
+        .coin-icon {
+            position: relative;
+            display: inline-block;
+        }
+
+        .coin-icon::before {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle, rgba(255,215,0,0.3) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            z-index: -1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bounce-in {
+            animation: bounceIn 0.5s ease-in-out;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            70% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .class-tab {
+            background-color: #FFF8E1;
+            transition: all 0.3s ease;
+        }
+
+        .class-tab:hover, .class-tab.active {
+            background-color: #FFEB3B;
+        }
+
+        .modal {
+            transition: all 0.3s ease;
+        }
+
+        .modal-content {
+            border-radius: 16px;
+            animation: zoomIn 0.3s ease-in-out;
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .piggy-bank {
+            position: relative;
+        }
+
+        .piggy-bank::after {
+            content: '💰';
+            position: absolute;
+            font-size: 20px;
+            top: -10px;
+            right: -10px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .summary-card {
+            border-radius: 16px;
+            background-color: white;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .summary-header {
+            background-color: #00BCD4;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .avatar-placeholder {
+            width: 80px;
+            height: 80px;
+            background-color: #B2EBF2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #00BCD4;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #E0F7FA;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00BCD4;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0097A7;
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-md">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center">
+                    <div class="piggy-bank mr-3">
+                        <i class="fas fa-piggy-bank text-3xl text-[#00BCD4]"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-[#00BCD4]">ระบบฝาก-ถอนเงินนักเรียน</h1>
+                </div>
+                <button id="addStudentBtn" class="btn-primary px-4 py-2 flex items-center">
+                    <i class="fas fa-plus mr-2"></i> เพิ่มนักเรียนใหม่
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="container mx-auto px-4 py-6">
+            <!-- Class Tabs -->
+            <div class="mb-6 overflow-x-auto">
+                <div class="flex space-x-2 min-w-max">
+                    <button class="class-tab active px-4 py-2 rounded-t-lg font-medium" data-class="all">ทั้งหมด</button>
+                    <button class="class-tab px-4 py-2 rounded-t-lg font-medium" data-class="k2">อนุบาล 2</button>
+                    <button class="class-tab px-4 py-2 rounded-t-lg font-medium" data-class="k3">อนุบาล 3</button>
+                    <button class="class-tab px-4 py-2 rounded-t-lg font-medium" data-class="p1">ประถม 1</button>
+                    <button class="class-tab px-4 py-2 rounded-t-lg font-medium" data-class="p2">ประถม 2</button>
+                    <button class="class-tab px-4 py-2 rounded-t-lg font-medium" data-class="p3">ประถม 3</button>
+                    <button class="class-tab px-4 py-2 rounded-t-lg font-medium" data-class="p4">ประถม 4</button>
+                    <button class="class-tab px-4 py-2 rounded-t-lg font-medium" data-class="p5">ประถม 5</button>
+                    <button class="class-tab px-4 py-2 rounded-t-lg font-medium" data-class="p6">ประถม 6</button>
+                </div>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="mb-6 bg-white p-4 rounded-lg shadow-sm">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="flex-1">
+                        <div class="relative">
+                            <input type="text" id="searchInput" placeholder="ค้นหานักเรียน..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00BCD4]">
+                            <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button id="summaryBtn" class="btn-secondary px-4 py-2 flex items-center">
+                            <i class="fas fa-chart-pie mr-2"></i> สรุปข้อมูล
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Students Grid -->
+            <div id="studentsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Student cards will be generated here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden text-center py-12">
+                <div class="text-6xl mb-4 floating">🏦</div>
+                <h3 class="text-xl font-medium mb-2">ยังไม่มีข้อมูลนักเรียน</h3>
+                <p class="text-gray-500 mb-6">กดปุ่ม "เพิ่มนักเรียนใหม่" เพื่อเริ่มต้นใช้งานระบบ</p>
+                <button id="emptyAddStudentBtn" class="btn-primary px-6 py-3 inline-flex items-center">
+                    <i class="fas fa-plus mr-2"></i> เพิ่มนักเรียนใหม่
+                </button>
+            </div>
+        </main>
+
+        <!-- Add/Edit Student Modal -->
+        <div id="studentModal" class="modal fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+            <div class="modal-content bg-white w-full max-w-md mx-4 p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 id="modalTitle" class="text-xl font-bold">เพิ่มนักเรียนใหม่</h2>
+                    <button id="closeModal" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <form id="studentForm">
+                    <input type="hidden" id="studentId">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2" for="studentName">ชื่อ-นามสกุล</label>
+                        <input type="text" id="studentName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00BCD4]" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2" for="studentClass">ระดับชั้น</label>
+                        <select id="studentClass" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00BCD4]" required>
+                            <option value="k2">อนุบาล 2</option>
+                            <option value="k3">อนุบาล 3</option>
+                            <option value="p1">ประถม 1</option>
+                            <option value="p2">ประถม 2</option>
+                            <option value="p3">ประถม 3</option>
+                            <option value="p4">ประถม 4</option>
+                            <option value="p5">ประถม 5</option>
+                            <option value="p6">ประถม 6</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2" for="studentBalance">ยอดเงินเริ่มต้น (บาท)</label>
+                        <input type="number" id="studentBalance" min="0" step="0.01" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00BCD4]" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2" for="studentAvatar">อิโมจิประจำตัว</label>
+                        <div class="grid grid-cols-8 gap-2">
+                            <button type="button" class="avatar-option w-10 h-10 flex items-center justify-center border border-gray-300 rounded-lg hover:bg-gray-100" data-emoji="👦">👦</button>
+                            <button type="button" class="avatar-option w-10 h-10 flex items-center justify-center border border-gray-300 rounded-lg hover:bg-gray-100" data-emoji="👧">👧</button>
+                            <button type="button" class="avatar-option w-10 h-10 flex items-center justify-center border border-gray-300 rounded-lg hover:bg-gray-100" data-emoji="🧒">🧒</button>
+                            <button type="button" class="avatar-option w-10 h-10 flex items-center justify-center border border-gray-300 rounded-lg hover:bg-gray-100" data-emoji="👶">👶</button>
+                            <button type="button" class="avatar-option w-10 h-10 flex items-center justify-center border border-gray-300 rounded-lg hover:bg-gray-100" data-emoji="😊">😊</button>
+                            <button type="button" class="avatar-option w-10 h-10 flex items-center justify-center border border-gray-300 rounded-lg hover:bg-gray-100" data-emoji="🥳">🥳</button>
+                            <button type="button" class="avatar-option w-10 h-10 flex items-center justify-center border border-gray-300 rounded-lg hover:bg-gray-100" data-emoji="🤓">🤓</button>
+                            <button type="button" class="avatar-option w-10 h-10 flex items-center justify-center border border-gray-300 rounded-lg hover:bg-gray-100" data-emoji="😎">😎</button>
+                        </div>
+                        <input type="hidden" id="studentAvatar" value="👦" required>
+                    </div>
+                    <div class="flex justify-end space-x-2">
+                        <button type="button" id="cancelBtn" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100">ยกเลิก</button>
+                        <button type="submit" class="btn-primary px-4 py-2">บันทึก</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Transaction Modal -->
+        <div id="transactionModal" class="modal fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+            <div class="modal-content bg-white w-full max-w-md mx-4 p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 id="transactionTitle" class="text-xl font-bold">ฝาก/ถอนเงิน</h2>
+                    <button id="closeTransactionModal" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div class="text-center mb-4">
+                    <div id="transactionAvatar" class="text-4xl mb-2">👦</div>
+                    <h3 id="transactionStudentName" class="text-lg font-medium">ชื่อนักเรียน</h3>
+                    <p class="text-gray-500" id="transactionStudentClass">ระดับชั้น</p>
+                    <div class="mt-2">
+                        <span class="text-gray-700">ยอดเงินปัจจุบัน:</span>
+                        <span id="transactionCurrentBalance" class="font-bold text-[#00BCD4]">0.00</span>
+                        <span class="text-gray-700">บาท</span>
+                    </div>
+                </div>
+                <form id="transactionForm">
+                    <input type="hidden" id="transactionStudentId">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">ประเภทรายการ</label>
+                        <div class="flex space-x-2">
+                            <button type="button" id="depositBtn" class="flex-1 py-2 rounded-lg border-2 border-[#00BCD4] text-[#00BCD4] font-medium hover:bg-[#E0F7FA] transaction-type-btn active" data-type="deposit">
+                                <i class="fas fa-plus-circle mr-1"></i> ฝากเงิน
+                            </button>
+                            <button type="button" id="withdrawBtn" class="flex-1 py-2 rounded-lg border-2 border-[#F48FB1] text-[#F48FB1] font-medium hover:bg-[#FCE4EC] transaction-type-btn" data-type="withdraw">
+                                <i class="fas fa-minus-circle mr-1"></i> ถอนเงิน
+                            </button>
+                        </div>
+                        <input type="hidden" id="transactionType" value="deposit">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2" for="transactionAmount">จำนวนเงิน (บาท)</label>
+                        <input type="number" id="transactionAmount" min="0" step="0.01" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00BCD4]" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2" for="transactionNote">บันทึกเพิ่มเติม (ไม่บังคับ)</label>
+                        <input type="text" id="transactionNote" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00BCD4]">
+                    </div>
+                    <div class="flex justify-end space-x-2">
+                        <button type="button" id="cancelTransactionBtn" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100">ยกเลิก</button>
+                        <button type="submit" id="confirmTransactionBtn" class="btn-primary px-4 py-2">ยืนยันรายการ</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Summary Modal -->
+        <div id="summaryModal" class="modal fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+            <div class="modal-content bg-white w-full max-w-4xl mx-4 p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold">สรุปข้อมูลการออม</h2>
+                    <button id="closeSummaryModal" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <div class="mb-6">
+                    <h3 class="text-lg font-medium mb-3">ภาพรวมทั้งโรงเรียน</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="summary-card pulse">
+                            <div class="summary-header">
+                                <h4 class="font-medium">จำนวนนักเรียนทั้งหมด</h4>
+                            </div>
+                            <div class="p-4 flex items-center">
+                                <div class="text-3xl mr-3 text-[#00BCD4]">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div>
+                                    <p id="totalStudents" class="text-2xl font-bold">0</p>
+                                    <p class="text-sm text-gray-500">คน</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="summary-card pulse">
+                            <div class="summary-header">
+                                <h4 class="font-medium">ยอดเงินรวมทั้งหมด</h4>
+                            </div>
+                            <div class="p-4 flex items-center">
+                                <div class="text-3xl mr-3 text-[#FFEB3B]">
+                                    <i class="fas fa-coins coin-icon"></i>
+                                </div>
+                                <div>
+                                    <p id="totalBalance" class="text-2xl font-bold">0.00</p>
+                                    <p class="text-sm text-gray-500">บาท</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="summary-card pulse">
+                            <div class="summary-header">
+                                <h4 class="font-medium">ค่าเฉลี่ยต่อคน</h4>
+                            </div>
+                            <div class="p-4 flex items-center">
+                                <div class="text-3xl mr-3 text-[#F48FB1]">
+                                    <i class="fas fa-piggy-bank"></i>
+                                </div>
+                                <div>
+                                    <p id="averageBalance" class="text-2xl font-bold">0.00</p>
+                                    <p class="text-sm text-gray-500">บาท/คน</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-medium mb-3">สรุปตามระดับชั้น</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white rounded-lg overflow-hidden">
+                            <thead class="bg-[#00BCD4] text-white">
+                                <tr>
+                                    <th class="py-3 px-4 text-left">ระดับชั้น</th>
+                                    <th class="py-3 px-4 text-left">จำนวนนักเรียน</th>
+                                    <th class="py-3 px-4 text-left">ยอดเงินรวม</th>
+                                    <th class="py-3 px-4 text-left">ค่าเฉลี่ยต่อคน</th>
+                                </tr>
+                            </thead>
+                            <tbody id="summaryTableBody">
+                                <!-- Summary data will be generated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div id="deleteModal" class="modal fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+            <div class="modal-content bg-white w-full max-w-md mx-4 p-6">
+                <div class="text-center mb-4">
+                    <div class="text-5xl text-red-500 mb-4">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <h2 class="text-xl font-bold mb-2">ยืนยันการลบข้อมูล</h2>
+                    <p class="text-gray-600">คุณต้องการลบข้อมูลของ <span id="deleteStudentName" class="font-medium">นักเรียน</span> ใช่หรือไม่?</p>
+                    <p class="text-red-500 text-sm mt-2">การดำเนินการนี้ไม่สามารถยกเลิกได้</p>
+                </div>
+                <div class="flex justify-center space-x-3">
+                    <button id="cancelDeleteBtn" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100">ยกเลิก</button>
+                    <button id="confirmDeleteBtn" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">ยืนยันการลบ</button>
+                </div>
+                <input type="hidden" id="deleteStudentId">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Store students data
+        let students = JSON.parse(localStorage.getItem('students')) || [];
+        let currentFilter = 'all';
+        let editingStudentId = null;
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            renderStudents();
+            setupEventListeners();
+        });
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Add student button
+            document.getElementById('addStudentBtn').addEventListener('click', openAddStudentModal);
+            document.getElementById('emptyAddStudentBtn').addEventListener('click', openAddStudentModal);
+            
+            // Close modals
+            document.getElementById('closeModal').addEventListener('click', closeStudentModal);
+            document.getElementById('cancelBtn').addEventListener('click', closeStudentModal);
+            document.getElementById('closeTransactionModal').addEventListener('click', closeTransactionModal);
+            document.getElementById('cancelTransactionBtn').addEventListener('click', closeTransactionModal);
+            document.getElementById('closeSummaryModal').addEventListener('click', closeSummaryModal);
+            document.getElementById('cancelDeleteBtn').addEventListener('click', closeDeleteModal);
+            
+            // Form submissions
+            document.getElementById('studentForm').addEventListener('submit', handleStudentFormSubmit);
+            document.getElementById('transactionForm').addEventListener('submit', handleTransactionFormSubmit);
+            
+            // Transaction type buttons
+            document.getElementById('depositBtn').addEventListener('click', function() {
+                setTransactionType('deposit');
+            });
+            document.getElementById('withdrawBtn').addEventListener('click', function() {
+                setTransactionType('withdraw');
+            });
+            
+            // Avatar selection
+            document.querySelectorAll('.avatar-option').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const emoji = this.getAttribute('data-emoji');
+                    document.getElementById('studentAvatar').value = emoji;
+                    document.querySelectorAll('.avatar-option').forEach(b => {
+                        b.classList.remove('bg-[#E0F7FA]', 'border-[#00BCD4]');
+                    });
+                    this.classList.add('bg-[#E0F7FA]', 'border-[#00BCD4]');
+                });
+            });
+            
+            // Class tabs
+            document.querySelectorAll('.class-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const classFilter = this.getAttribute('data-class');
+                    currentFilter = classFilter;
+                    document.querySelectorAll('.class-tab').forEach(t => {
+                        t.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    renderStudents();
+                });
+            });
+            
+            // Search input
+            document.getElementById('searchInput').addEventListener('input', function() {
+                renderStudents();
+            });
+            
+            // Summary button
+            document.getElementById('summaryBtn').addEventListener('click', openSummaryModal);
+            
+            // Delete confirmation
+            document.getElementById('confirmDeleteBtn').addEventListener('click', deleteStudent);
+        }
+
+        // Render students based on current filter and search
+        function renderStudents() {
+            const grid = document.getElementById('studentsGrid');
+            const emptyState = document.getElementById('emptyState');
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            
+            // Filter students based on class and search
+            let filteredStudents = students;
+            
+            if (currentFilter !== 'all') {
+                filteredStudents = filteredStudents.filter(student => student.class === currentFilter);
+            }
+            
+            if (searchInput) {
+                filteredStudents = filteredStudents.filter(student => 
+                    student.name.toLowerCase().includes(searchInput)
+                );
+            }
+            
+            // Clear the grid
+            grid.innerHTML = '';
+            
+            // Show empty state if no students
+            if (students.length === 0) {
+                grid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                grid.classList.remove('hidden');
+                emptyState.classList.add('hidden');
+            }
+            
+            // Show message if no results from filter
+            if (filteredStudents.length === 0) {
+                const noResults = document.createElement('div');
+                noResults.className = 'col-span-full text-center py-8';
+                noResults.innerHTML = `
+                    <div class="text-4xl mb-3">🔍</div>
+                    <h3 class="text-xl font-medium mb-2">ไม่พบข้อมูลนักเรียน</h3>
+                    <p class="text-gray-500">ลองเปลี่ยนคำค้นหาหรือตัวกรองใหม่</p>
+                `;
+                grid.appendChild(noResults);
+                return;
+            }
+            
+            // Render each student card
+            filteredStudents.forEach(student => {
+                const card = createStudentCard(student);
+                grid.appendChild(card);
+            });
+            
+            // Add fade-in animation to cards
+            document.querySelectorAll('.student-card').forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('fade-in');
+                }, index * 100);
+            });
+        }
+
+        // Create a student card element
+        function createStudentCard(student) {
+            const card = document.createElement('div');
+            card.className = 'student-card shadow-sm';
+            card.setAttribute('data-id', student.id);
+            
+            // Format the balance with commas and 2 decimal places
+            const formattedBalance = parseFloat(student.balance).toLocaleString('th-TH', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+            
+            // Get class name in Thai
+            const classNames = {
+                'k2': 'อนุบาล 2',
+                'k3': 'อนุบาล 3',
+                'p1': 'ประถม 1',
+                'p2': 'ประถม 2',
+                'p3': 'ประถม 3',
+                'p4': 'ประถม 4',
+                'p5': 'ประถม 5',
+                'p6': 'ประถม 6'
+            };
+            
+            card.innerHTML = `
+                <div class="bg-gradient-to-r from-[#B2EBF2] to-[#E0F7FA] p-4 flex items-center">
+                    <div class="w-16 h-16 rounded-full bg-white flex items-center justify-center text-4xl mr-4 shadow-sm">
+                        ${student.avatar || '👦'}
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-medium text-lg">${student.name}</h3>
+                        <p class="text-sm text-gray-600">${classNames[student.class]}</p>
+                    </div>
+                </div>
+                <div class="p-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <p class="text-sm text-gray-500">ยอดเงินสะสม</p>
+                            <p class="text-xl font-bold text-[#00BCD4]">${formattedBalance} บาท</p>
+                        </div>
+                        <div class="coin-icon text-2xl text-[#FFEB3B]">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="transaction-btn flex-1 btn-primary py-2 text-sm">
+                            <i class="fas fa-exchange-alt mr-1"></i> ฝาก/ถอน
+                        </button>
+                        <button class="edit-btn flex-1 btn-secondary py-2 text-sm">
+                            <i class="fas fa-edit mr-1"></i> แก้ไข
+                        </button>
+                        <button class="delete-btn w-10 h-10 flex items-center justify-center rounded-lg bg-red-100 text-red-500 hover:bg-red-200">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Add event listeners to buttons
+            card.querySelector('.transaction-btn').addEventListener('click', () => {
+                openTransactionModal(student.id);
+            });
+            
+            card.querySelector('.edit-btn').addEventListener('click', () => {
+                openEditStudentModal(student.id);
+            });
+            
+            card.querySelector('.delete-btn').addEventListener('click', () => {
+                openDeleteModal(student.id);
+            });
+            
+            return card;
+        }
+
+        // Open add student modal
+        function openAddStudentModal() {
+            document.getElementById('modalTitle').textContent = 'เพิ่มนักเรียนใหม่';
+            document.getElementById('studentForm').reset();
+            document.getElementById('studentId').value = '';
+            document.getElementById('studentBalance').value = '0';
+            document.getElementById('studentAvatar').value = '👦';
+            
+            // Reset avatar selection
+            document.querySelectorAll('.avatar-option').forEach(btn => {
+                btn.classList.remove('bg-[#E0F7FA]', 'border-[#00BCD4]');
+                if (btn.getAttribute('data-emoji') === '👦') {
+                    btn.classList.add('bg-[#E0F7FA]', 'border-[#00BCD4]');
+                }
+            });
+            
+            editingStudentId = null;
+            document.getElementById('studentModal').classList.remove('hidden');
+        }
+
+        // Open edit student modal
+        function openEditStudentModal(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+            
+            document.getElementById('modalTitle').textContent = 'แก้ไขข้อมูลนักเรียน';
+            document.getElementById('studentId').value = student.id;
+            document.getElementById('studentName').value = student.name;
+            document.getElementById('studentClass').value = student.class;
+            document.getElementById('studentBalance').value = student.balance;
+            document.getElementById('studentAvatar').value = student.avatar || '👦';
+            
+            // Set avatar selection
+            document.querySelectorAll('.avatar-option').forEach(btn => {
+                btn.classList.remove('bg-[#E0F7FA]', 'border-[#00BCD4]');
+                if (btn.getAttribute('data-emoji') === student.avatar) {
+                    btn.classList.add('bg-[#E0F7FA]', 'border-[#00BCD4]');
+                }
+            });
+            
+            editingStudentId = student.id;
+            document.getElementById('studentModal').classList.remove('hidden');
+        }
+
+        // Close student modal
+        function closeStudentModal() {
+            document.getElementById('studentModal').classList.add('hidden');
+        }
+
+        // Handle student form submit
+        function handleStudentFormSubmit(e) {
+            e.preventDefault();
+            
+            const studentId = document.getElementById('studentId').value;
+            const name = document.getElementById('studentName').value;
+            const studentClass = document.getElementById('studentClass').value;
+            const balance = parseFloat(document.getElementById('studentBalance').value);
+            const avatar = document.getElementById('studentAvatar').value;
+            
+            if (studentId) {
+                // Update existing student
+                const index = students.findIndex(s => s.id === studentId);
+                if (index !== -1) {
+                    students[index] = {
+                        ...students[index],
+                        name,
+                        class: studentClass,
+                        balance,
+                        avatar
+                    };
+                }
+            } else {
+                // Add new student
+                const newStudent = {
+                    id: Date.now().toString(),
+                    name,
+                    class: studentClass,
+                    balance,
+                    avatar,
+                    transactions: []
+                };
+                students.push(newStudent);
+            }
+            
+            // Save to localStorage and update UI
+            saveStudents();
+            renderStudents();
+            closeStudentModal();
+            
+            // Show success animation
+            const successToast = document.createElement('div');
+            successToast.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg bounce-in';
+            successToast.textContent = studentId ? 'บันทึกข้อมูลเรียบร้อย' : 'เพิ่มนักเรียนเรียบร้อย';
+            document.body.appendChild(successToast);
+            
+            setTimeout(() => {
+                successToast.style.opacity = '0';
+                successToast.style.transform = 'translateY(20px)';
+                successToast.style.transition = 'all 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(successToast);
+                }, 300);
+            }, 2000);
+        }
+
+        // Open transaction modal
+        function openTransactionModal(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+            
+            document.getElementById('transactionStudentId').value = student.id;
+            document.getElementById('transactionStudentName').textContent = student.name;
+            document.getElementById('transactionAvatar').textContent = student.avatar || '👦';
+            
+            // Get class name in Thai
+            const classNames = {
+                'k2': 'อนุบาล 2',
+                'k3': 'อนุบาล 3',
+                'p1': 'ประถม 1',
+                'p2': 'ประถม 2',
+                'p3': 'ประถม 3',
+                'p4': 'ประถม 4',
+                'p5': 'ประถม 5',
+                'p6': 'ประถม 6'
+            };
+            
+            document.getElementById('transactionStudentClass').textContent = classNames[student.class];
+            
+            // Format the balance
+            const formattedBalance = parseFloat(student.balance).toLocaleString('th-TH', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+            
+            document.getElementById('transactionCurrentBalance').textContent = formattedBalance;
+            document.getElementById('transactionAmount').value = '';
+            document.getElementById('transactionNote').value = '';
+            
+            // Reset transaction type to deposit
+            setTransactionType('deposit');
+            
+            document.getElementById('transactionModal').classList.remove('hidden');
+        }
+
+        // Close transaction modal
+        function closeTransactionModal() {
+            document.getElementById('transactionModal').classList.add('hidden');
+        }
+
+        // Set transaction type
+        function setTransactionType(type) {
+            document.getElementById('transactionType').value = type;
+            document.querySelectorAll('.transaction-type-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (type === 'deposit') {
+                document.getElementById('depositBtn').classList.add('active');
+                document.getElementById('confirmTransactionBtn').className = 'btn-primary px-4 py-2';
+            } else {
+                document.getElementById('withdrawBtn').classList.add('active');
+                document.getElementById('confirmTransactionBtn').className = 'btn-accent px-4 py-2';
+            }
+        }
+
+        // Handle transaction form submit
+        function handleTransactionFormSubmit(e) {
+            e.preventDefault();
+            
+            const studentId = document.getElementById('transactionStudentId').value;
+            const type = document.getElementById('transactionType').value;
+            const amount = parseFloat(document.getElementById('transactionAmount').value);
+            const note = document.getElementById('transactionNote').value;
+            
+            if (!amount || amount <= 0) {
+                alert('กรุณาระบุจำนวนเงินที่ถูกต้อง');
+                return;
+            }
+            
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+            
+            // Check if withdrawal amount is valid
+            if (type === 'withdraw' && amount > student.balance) {
+                alert('ยอดเงินไม่เพียงพอสำหรับการถอน');
+                return;
+            }
+            
+            // Update balance
+            if (type === 'deposit') {
+                student.balance = parseFloat(student.balance) + amount;
+            } else {
+                student.balance = parseFloat(student.balance) - amount;
+            }
+            
+            // Add transaction record
+            if (!student.transactions) {
+                student.transactions = [];
+            }
+            
+            student.transactions.push({
+                id: Date.now().toString(),
+                type,
+                amount,
+                note,
+                date: new Date().toISOString()
+            });
+            
+            // Save to localStorage and update UI
+            saveStudents();
+            renderStudents();
+            closeTransactionModal();
+            
+            // Show success animation
+            const successToast = document.createElement('div');
+            successToast.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg bounce-in';
+            successToast.textContent = type === 'deposit' ? 'ฝากเงินเรียบร้อย' : 'ถอนเงินเรียบร้อย';
+            document.body.appendChild(successToast);
+            
+            setTimeout(() => {
+                successToast.style.opacity = '0';
+                successToast.style.transform = 'translateY(20px)';
+                successToast.style.transition = 'all 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(successToast);
+                }, 300);
+            }, 2000);
+        }
+
+        // Open summary modal
+        function openSummaryModal() {
+            updateSummaryData();
+            document.getElementById('summaryModal').classList.remove('hidden');
+        }
+
+        // Close summary modal
+        function closeSummaryModal() {
+            document.getElementById('summaryModal').classList.add('hidden');
+        }
+
+        // Update summary data
+        function updateSummaryData() {
+            // Calculate total students
+            const totalStudents = students.length;
+            document.getElementById('totalStudents').textContent = totalStudents;
+            
+            // Calculate total balance
+            const totalBalance = students.reduce((sum, student) => sum + parseFloat(student.balance), 0);
+            document.getElementById('totalBalance').textContent = totalBalance.toLocaleString('th-TH', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+            
+            // Calculate average balance
+            const averageBalance = totalStudents > 0 ? totalBalance / totalStudents : 0;
+            document.getElementById('averageBalance').textContent = averageBalance.toLocaleString('th-TH', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+            
+            // Generate class summary
+            const classSummary = {};
+            const classNames = {
+                'k2': 'อนุบาล 2',
+                'k3': 'อนุบาล 3',
+                'p1': 'ประถม 1',
+                'p2': 'ประถม 2',
+                'p3': 'ประถม 3',
+                'p4': 'ประถม 4',
+                'p5': 'ประถม 5',
+                'p6': 'ประถม 6'
+            };
+            
+            // Initialize class summary
+            Object.keys(classNames).forEach(classKey => {
+                classSummary[classKey] = {
+                    name: classNames[classKey],
+                    count: 0,
+                    total: 0,
+                    average: 0
+                };
+            });
+            
+            // Calculate class summary
+            students.forEach(student => {
+                if (classSummary[student.class]) {
+                    classSummary[student.class].count++;
+                    classSummary[student.class].total += parseFloat(student.balance);
+                }
+            });
+            
+            // Calculate averages
+            Object.keys(classSummary).forEach(classKey => {
+                if (classSummary[classKey].count > 0) {
+                    classSummary[classKey].average = classSummary[classKey].total / classSummary[classKey].count;
+                }
+            });
+            
+            // Render table
+            const tableBody = document.getElementById('summaryTableBody');
+            tableBody.innerHTML = '';
+            
+            Object.keys(classSummary).forEach((classKey, index) => {
+                const summary = classSummary[classKey];
+                const row = document.createElement('tr');
+                
+                // Alternate row colors
+                if (index % 2 === 0) {
+                    row.className = 'bg-gray-50';
+                }
+                
+                row.innerHTML = `
+                    <td class="py-3 px-4">${summary.name}</td>
+                    <td class="py-3 px-4">${summary.count} คน</td>
+                    <td class="py-3 px-4">${summary.total.toLocaleString('th-TH', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    })} บาท</td>
+                    <td class="py-3 px-4">${summary.average.toLocaleString('th-TH', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    })} บาท</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Open delete modal
+        function openDeleteModal(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+            
+            document.getElementById('deleteStudentName').textContent = student.name;
+            document.getElementById('deleteStudentId').value = student.id;
+            document.getElementById('deleteModal').classList.remove('hidden');
+        }
+
+        // Close delete modal
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+        }
+
+        // Delete student
+        function deleteStudent() {
+            const studentId = document.getElementById('deleteStudentId').value;
+            students = students.filter(s => s.id !== studentId);
+            
+            // Save to localStorage and update UI
+            saveStudents();
+            renderStudents();
+            closeDeleteModal();
+            
+            // Show success animation
+            const successToast = document.createElement('div');
+            successToast.className = 'fixed bottom-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg bounce-in';
+            successToast.textContent = 'ลบข้อมูลนักเรียนเรียบร้อย';
+            document.body.appendChild(successToast);
+            
+            setTimeout(() => {
+                successToast.style.opacity = '0';
+                successToast.style.transform = 'translateY(20px)';
+                successToast.style.transition = 'all 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(successToast);
+                }, 300);
+            }, 2000);
+        }
+
+        // Save students to localStorage
+        function saveStudents() {
+            localStorage.setItem('students', JSON.stringify(students));
+        }
+
+        // Add sample data for testing
+        function addSampleData() {
+            if (students.length === 0) {
+                students = [
+                    {
+                        id: '1',
+                        name: 'เด็กชายกอบกู้  เอี่ยมสำอางค์',
+                        class: 'p4',
+                        balance: 0,
+                        avatar: '👦',
+                        transactions: []                 
+                    }
+                ];
+                saveStudents();
+                renderStudents();
+            }
+        }
+
+        // Add sample data if needed
+        if (students.length === 0) {
+            addSampleData();
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93aeb82581c27dc9',t:'MTc0NjQzMjE4NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
